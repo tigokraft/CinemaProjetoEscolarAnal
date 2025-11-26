@@ -12,16 +12,16 @@ using Microsoft.AspNetCore.Authorization;
 namespace CinemaGestao2223226.Controllers
 {
     [Authorize(Roles = "Administrador")]
-    public class SessaosController : Controller
+    public class SessoesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SessaosController(ApplicationDbContext context)
+        public SessoesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Sessaos
+        // GET: Sessoes
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Sessoes.Include(s => s.Filme);
