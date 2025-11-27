@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 
 namespace CinemaGestao.Models
 {
@@ -11,6 +14,9 @@ namespace CinemaGestao.Models
         [Required]
         [Display(Name = "Filme")]
         public int FilmeId { get; set; }
+
+        [JsonIgnore]                  // optional, but helps if you ever serialize
+        [ValidateNever]               // <-- ADD THIS (requires a using, see below)
         public virtual Filme Filme { get; set; }
 
         [Required]
@@ -30,6 +36,8 @@ namespace CinemaGestao.Models
         [Display(Name = "Lugares Disponíveis")]
         public int LugaresDisponiveis { get; set; }
 
+        [JsonIgnore]                  // optional
+        [ValidateNever]               // <-- ADD THIS TOO
         public virtual ICollection<Reserva> Reservas { get; set; }
     }
 }

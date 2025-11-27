@@ -62,12 +62,36 @@ namespace CinemaGestao2223226.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FilmeId,DataHora,Sala,Preco,LugaresTotais,LugaresDisponiveis")] Sessao sessao)
         {
+            // TEMP: to verify the POST is hit
+            Console.WriteLine("DEBUG: Entered SessoesController.Create POST");
+
             if (ModelState.IsValid)
             {
-                _context.Add(sessao);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(sessao);
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine("DEBUG: Sessao saved, redirecting to Index");
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("DEBUG: Exception while saving Sessao: " + ex);
+                    throw; // let the error page show it
+                }
             }
+
+            // If we get here, ModelState is invalid
+            foreach (var kvp in ModelState)
+            {
+                var key = kvp.Key;
+                var state = kvp.Value;
+                foreach (var error in state.Errors)
+                {
+                    Console.WriteLine($"DEBUG: ModelState error for '{key}': {error.ErrorMessage}");
+                }
+            }
+
             ViewData["FilmeId"] = new SelectList(_context.Filmes, "Id", "Titulo", sessao.FilmeId);
             return View(sessao);
         }
