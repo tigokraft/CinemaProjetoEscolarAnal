@@ -1,0 +1,89 @@
+﻿@model CinemaGestao.Models.Reserva
+
+@{
+    ViewData["Title"] = "Detalhes da Reserva";
+}
+
+<div class="container">
+    <h1 class="mb-4">📄 Detalhes da Reserva</h1>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Reserva #@Model.Id</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-muted">Informações do Filme</h6>
+                    <dl class="row">
+                        <dt class="col-sm-4">Filme:</dt>
+                        <dd class="col-sm-8">@Model.Sessao.Filme.Titulo</dd>
+
+                        <dt class="col-sm-4">Gênero:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-primary">@Model.Sessao.Filme.Genero</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Duração:</dt>
+                        <dd class="col-sm-8">@Model.Sessao.Filme.DuracaoMinutos minutos</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <h6 class="text-muted">Informações da Sessão</h6>
+                    <dl class="row">
+                        <dt class="col-sm-4">Data:</dt>
+                        <dd class="col-sm-8">@Model.Sessao.DataHora.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Horário:</dt>
+                        <dd class="col-sm-8">@Model.Sessao.DataHora.ToString("HH:mm")</dd>
+
+                        <dt class="col-sm-4">Sala:</dt>
+                        <dd class="col-sm-8">@Model.Sessao.Sala</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h6 class="text-muted">Informações da Reserva</h6>
+                    <dl class="row">
+                        <dt class="col-sm-3">Número de Bilhetes:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-success fs-6">@Model.NumeroBilhetes</span>
+                        </dd>
+
+                        <dt class="col-sm-3">Preço Unitário:</dt>
+                        <dd class="col-sm-9">@Model.Sessao.Preco.ToString("C")</dd>
+
+                        <dt class="col-sm-3">Total:</dt>
+                        <dd class="col-sm-9">
+                            <strong class="text-success fs-5">@((Model.Sessao.Preco * Model.NumeroBilhetes).ToString("C"))</strong>
+                        </dd>
+
+                        <dt class="col-sm-3">Data da Reserva:</dt>
+                        <dd class="col-sm-9">@Model.DataReserva.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <dt class="col-sm-3">ID do Cliente:</dt>
+                            <dd class="col-sm-9">@Model.UtilizadorId</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex gap-2">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Cancelar Reserva
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

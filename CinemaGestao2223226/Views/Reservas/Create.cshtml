@@ -1,0 +1,87 @@
+﻿@model CinemaGestao.Models.Reserva
+
+@{
+    var sessao = ViewBag.Sessao as CinemaGestao.Models.Sessao;
+    ViewData["Title"] = "Nova Reserva";
+}
+
+<div class="container">
+    <h1 class="mb-4">🎟️ Nova Reserva</h1>
+
+    @if (sessao != null)
+    {
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Detalhes da Sessão</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Filme:</strong> @sessao.Filme.Titulo</p>
+                        <p><strong>Data:</strong> @sessao.DataHora.ToString("dd/MM/yyyy")</p>
+                        <p><strong>Horário:</strong> @sessao.DataHora.ToString("HH:mm")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Sala:</strong> @sessao.Sala</p>
+                        <p><strong>Preço por Bilhete:</strong> @sessao.Preco.ToString("C")</p>
+                        <p><strong>Lugares Disponíveis:</strong> 
+                            <span class="badge bg-success">@sessao.LugaresDisponiveis</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <input type="hidden" asp-for="SessaoId" value="@ViewData["SessaoId"]" />
+                        
+                        <div class="mb-3">
+                            <label asp-for="NumeroBilhetes" class="form-label">Número de Bilhetes</label>
+                            <input asp-for="NumeroBilhetes" class="form-control" type="number" min="1" max="@(sessao?.LugaresDisponiveis ?? 20)" value="1" id="numeroBilhetes" />
+                            <span asp-validation-for="NumeroBilhetes" class="text-danger"></span>
+                        </div>
+
+                        @if (sessao != null)
+                        {
+                            <div class="alert alert-info">
+                                <strong>Total:</strong> 
+                                <span id="total">@sessao.Preco.ToString("C")</span>
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Confirmar Reserva
+                            </button>
+                            <a asp-controller="Catalogo" asp-action="Sessoes" asp-route-id="@sessao?.FilmeId" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @if (sessao != null)
+    {
+        <script>
+            document.getElementById('numeroBilhetes').addEventListener('input', function() {
+                var quantidade = parseInt(this.value) || 0;
+                var preco = @sessao.Preco;
+                var total = quantidade * preco;
+                document.getElementById('total').innerText = total.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' });
+            });
+        </script>
+    }
+}

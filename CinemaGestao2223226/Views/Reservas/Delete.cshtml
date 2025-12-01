@@ -1,0 +1,55 @@
+﻿@model CinemaGestao.Models.Reserva
+
+@{
+    ViewData["Title"] = "Cancelar Reserva";
+}
+
+<div class="container">
+    <h1 class="mb-4 text-danger">⚠️ Cancelar Reserva</h1>
+
+    <div class="alert alert-danger">
+        <h5>Tem certeza que deseja cancelar esta reserva?</h5>
+        <p>Esta ação não pode ser desfeita. Os lugares serão devolvidos à sessão.</p>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Reserva #@Model.Id</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Filme:</dt>
+                <dd class="col-sm-9">@Model.Sessao.Filme.Titulo</dd>
+
+                <dt class="col-sm-3">Data e Horário:</dt>
+                <dd class="col-sm-9">@Model.Sessao.DataHora.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                <dt class="col-sm-3">Sala:</dt>
+                <dd class="col-sm-9">@Model.Sessao.Sala</dd>
+
+                <dt class="col-sm-3">Bilhetes:</dt>
+                <dd class="col-sm-9">@Model.NumeroBilhetes</dd>
+
+                <dt class="col-sm-3">Total Pago:</dt>
+                <dd class="col-sm-9">
+                    <strong>@((Model.Sessao.Preco * Model.NumeroBilhetes).ToString("C"))</strong>
+                </dd>
+
+                <dt class="col-sm-3">Data da Reserva:</dt>
+                <dd class="col-sm-9">@Model.DataReserva.ToString("dd/MM/yyyy HH:mm")</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Sim, Cancelar Reserva
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Não, Voltar
+            </a>
+        </div>
+    </form>
+</div>
