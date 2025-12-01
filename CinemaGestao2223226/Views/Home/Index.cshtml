@@ -1,29 +1,43 @@
 ﻿@model IEnumerable<CinemaGestao.Models.Filme>
-
+@using Microsoft.AspNetCore.Localization
 @{
     ViewData["Title"] = "Home";
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var isEnglish = (requestCulture?.RequestCulture.UICulture.Name ?? "pt-PT") == "en-US";
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <!-- Hero Section -->
 <div class="text-center py-5 bg-dark text-white rounded mb-5" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/cinema-hero.jpg'); background-size: cover;">
-    <h1 class="display-3 fw-bold">🎬 Bem-vindo ao Nexor Cinema</h1>
-    <p class="lead fs-4">Sistema de Gestão de Cinema - Projeto Escolar</p>
+    <h1 class="display-3 fw-bold">
+        🎬 @(isEnglish ? "Welcome to Nexor Cinema" : "Bem-vindo ao Nexor Cinema")
+    </h1>
+    <p class="lead fs-4">
+        @(isEnglish ? "Cinema Management System - School Project" : "Sistema de Gestão de Cinema - Projeto Escolar")
+    </p>
     <a asp-controller="Catalogo" asp-action="Index" class="btn btn-danger btn-lg mt-3 px-5">
-        <i class="bi bi-ticket-perforated"></i> Ver Filmes Disponíveis
+        <i class="bi bi-ticket-perforated"></i> @(isEnglish ? "View Available Movies" : "Ver Filmes Disponíveis")
     </a>
 </div>
 
 <!-- Now Showing Section with Movie Cards -->
 <div class="row mb-5">
     <div class="col-12">
-        <h2 class="mb-4"><i class="bi bi-film"></i> Em Cartaz</h2>
+        <h2 class="mb-4"><i class="bi bi-film"></i> @(isEnglish ? "Now Showing" : "Em Cartaz")</h2>
         
         @if (!Model.Any())
         {
             <div class="alert alert-info">
-                <i class="bi bi-info-circle"></i> Não há filmes em exibição no momento. Consulte o nosso <a asp-controller="Catalogo" asp-action="Index" class="alert-link">catálogo completo</a>
+                <i class="bi bi-info-circle"></i> 
+                @if (isEnglish)
+                {
+                    <text>There are no movies currently showing. Check our <a asp-controller="Catalogo" asp-action="Index" class="alert-link">full catalog</a></text>
+                }
+                else
+                {
+                    <text>Não há filmes em exibição no momento. Consulte o nosso <a asp-controller="Catalogo" asp-action="Index" class="alert-link">catálogo completo</a></text>
+                }
             </div>
         }
         else
@@ -47,13 +61,13 @@
                                 <h5 class="card-title">@filme.Titulo</h5>
                                 <p class="card-text">
                                     <span class="badge bg-primary">@filme.Genero</span>
-                                    <span class="badge bg-info text-dark">@filme.DuracaoMinutos min</span>
+                                    <span class="badge bg-info text-dark">@filme.DuracaoMinutos @(isEnglish ? "min" : "min")</span>
                                 </p>
                                 <p class="card-text text-truncate">@filme.Descricao</p>
                             </div>
                             <div class="card-footer bg-transparent">
                                 <a asp-controller="Catalogo" asp-action="Details" asp-route-id="@filme.Id" class="btn btn-primary w-100">
-                                    <i class="bi bi-info-circle"></i> Ver Detalhes
+                                    <i class="bi bi-info-circle"></i> @(isEnglish ? "View Details" : "Ver Detalhes")
                                 </a>
                             </div>
                         </div>
@@ -62,7 +76,7 @@
             </div>
             <div class="text-center">
                 <a asp-controller="Catalogo" asp-action="Index" class="btn btn-outline-primary btn-lg">
-                    <i class="bi bi-arrow-right-circle"></i> Ver Todos os Filmes
+                    <i class="bi bi-arrow-right-circle"></i> @(isEnglish ? "View All Movies" : "Ver Todos os Filmes")
                 </a>
             </div>
         }
@@ -75,8 +89,10 @@
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
                 <i class="bi bi-clock-history" style="font-size: 3rem; color: #0d6efd;"></i>
-                <h5 class="card-title mt-3">Horários Flexíveis</h5>
-                <p class="card-text">Sessões disponíveis de manhã à noite, todos os dias da semana</p>
+                <h5 class="card-title mt-3">@(isEnglish ? "Flexible Schedule" : "Horários Flexíveis")</h5>
+                <p class="card-text">
+                    @(isEnglish ? "Sessions available from morning to night, every day of the week" : "Sessões disponíveis de manhã à noite, todos os dias da semana")
+                </p>
             </div>
         </div>
     </div>
@@ -84,8 +100,10 @@
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
                 <i class="bi bi-database" style="font-size: 3rem; color: #198754;"></i>
-                <h5 class="card-title mt-3">Gestão Completa</h5>
-                <p class="card-text">Sistema integrado para gestão de filmes, sessões e reservas</p>
+                <h5 class="card-title mt-3">@(isEnglish ? "Complete Management" : "Gestão Completa")</h5>
+                <p class="card-text">
+                    @(isEnglish ? "Integrated system for managing movies, sessions and reservations" : "Sistema integrado para gestão de filmes, sessões e reservas")
+                </p>
             </div>
         </div>
     </div>
@@ -93,8 +111,10 @@
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
                 <i class="bi bi-person-check" style="font-size: 3rem; color: #ffc107;"></i>
-                <h5 class="card-title mt-3">Sistema de Utilizadores</h5>
-                <p class="card-text">Controlo de acesso com perfis de administrador e cliente</p>
+                <h5 class="card-title mt-3">@(isEnglish ? "User System" : "Sistema de Utilizadores")</h5>
+                <p class="card-text">
+                    @(isEnglish ? "Access control with administrator and client profiles" : "Controlo de acesso com perfis de administrador e cliente")
+                </p>
             </div>
         </div>
     </div>
@@ -105,15 +125,15 @@
     @if (User.IsInRole("Administrador"))
     {
         <div class="col-12 mb-4">
-            <h3 class="mb-3"><i class="bi bi-gear-fill"></i> Painel de Administração</h3>
+            <h3 class="mb-3"><i class="bi bi-gear-fill"></i> Administration Panel</h3>
         </div>
         <div class="col-md-3 mb-4">
             <div class="card text-center shadow">
                 <div class="card-body">
                     <i class="bi bi-film" style="font-size: 3rem; color: #0d6efd;"></i>
-                    <h5 class="card-title mt-3">Gerir Filmes</h5>
-                    <p class="card-text">Adicionar, editar e remover filmes</p>
-                    <a asp-controller="Filmes" asp-action="Index" class="btn btn-primary">Aceder</a>
+                    <h5 class="card-title mt-3">Manage Movies</h5>
+                    <p class="card-text">Add, edit and remove movies</p>
+                    <a asp-controller="Filmes" asp-action="Index" class="btn btn-primary">Access</a>
                 </div>
             </div>
         </div>
@@ -122,9 +142,9 @@
             <div class="card text-center shadow">
                 <div class="card-body">
                     <i class="bi bi-calendar-event" style="font-size: 3rem; color: #198754;"></i>
-                    <h5 class="card-title mt-3">Gerir Sessões</h5>
-                    <p class="card-text">Gerir horários e salas</p>
-                    <a asp-controller="Sessoes" asp-action="Index" class="btn btn-success">Aceder</a>
+                    <h5 class="card-title mt-3">Manage Sessions</h5>
+                    <p class="card-text">Manage schedules and rooms</p>
+                    <a asp-controller="Sessoes" asp-action="Index" class="btn btn-success">Access</a>
                 </div>
             </div>
         </div>
@@ -133,9 +153,9 @@
             <div class="card text-center shadow">
                 <div class="card-body">
                     <i class="bi bi-ticket-perforated" style="font-size: 3rem; color: #ffc107;"></i>
-                    <h5 class="card-title mt-3">Ver Reservas</h5>
-                    <p class="card-text">Todas as reservas do sistema</p>
-                    <a asp-controller="Reservas" asp-action="Index" class="btn btn-warning">Aceder</a>
+                    <h5 class="card-title mt-3">View Reservations</h5>
+                    <p class="card-text">All system reservations</p>
+                    <a asp-controller="Reservas" asp-action="Index" class="btn btn-warning">Access</a>
                 </div>
             </div>
         </div>
@@ -144,9 +164,9 @@
             <div class="card text-center shadow">
                 <div class="card-body">
                     <i class="bi bi-people" style="font-size: 3rem; color: #dc3545;"></i>
-                    <h5 class="card-title mt-3">Utilizadores</h5>
-                    <p class="card-text">Ver utilizadores registados</p>
-                    <a asp-controller="Utilizadores" asp-action="Index" class="btn btn-danger">Aceder</a>
+                    <h5 class="card-title mt-3">Users</h5>
+                    <p class="card-text">View registered users</p>
+                    <a asp-controller="Utilizadores" asp-action="Index" class="btn btn-danger">Access</a>
                 </div>
             </div>
         </div>
@@ -155,7 +175,7 @@
     @if (!User.IsInRole("Administrador"))
     {
         <div class="col-12 mb-4">
-            <h3 class="mb-3"><i class="bi bi-star-fill"></i> Acesso Rápido</h3>
+            <h3 class="mb-3"><i class="bi bi-star-fill"></i> @(isEnglish ? "Quick Access" : "Acesso Rápido")</h3>
         </div>
     }
 
@@ -163,9 +183,13 @@
         <div class="card text-center shadow h-100">
             <div class="card-body">
                 <i class="bi bi-film" style="font-size: 3rem; color: #0d6efd;"></i>
-                <h5 class="card-title mt-3">Catálogo de Filmes</h5>
-                <p class="card-text">Explore os filmes em cartaz e escolha a sua próxima sessão</p>
-                <a asp-controller="Catalogo" asp-action="Index" class="btn btn-primary btn-lg">Ver Catálogo</a>
+                <h5 class="card-title mt-3">@(isEnglish ? "Movie Catalog" : "Catálogo de Filmes")</h5>
+                <p class="card-text">
+                    @(isEnglish ? "Explore the movies on show and choose your next session" : "Explore os filmes em cartaz e escolha a sua próxima sessão")
+                </p>
+                <a asp-controller="Catalogo" asp-action="Index" class="btn btn-primary btn-lg">
+                    @(isEnglish ? "View Catalog" : "Ver Catálogo")
+                </a>
             </div>
         </div>
     </div>
@@ -176,9 +200,13 @@
             <div class="card text-center shadow h-100">
                 <div class="card-body">
                     <i class="bi bi-ticket-perforated" style="font-size: 3rem; color: #198754;"></i>
-                    <h5 class="card-title mt-3">Minhas Reservas</h5>
-                    <p class="card-text">Veja e gerencie o seu histórico de reservas</p>
-                    <a asp-controller="Reservas" asp-action="Index" class="btn btn-success btn-lg">Ver Reservas</a>
+                    <h5 class="card-title mt-3">@(isEnglish ? "My Reservations" : "Minhas Reservas")</h5>
+                    <p class="card-text">
+                        @(isEnglish ? "View and manage your reservation history" : "Veja e gerencie o seu histórico de reservas")
+                    </p>
+                    <a asp-controller="Reservas" asp-action="Index" class="btn btn-success btn-lg">
+                        @(isEnglish ? "View Reservations" : "Ver Reservas")
+                    </a>
                 </div>
             </div>
         </div>
@@ -189,8 +217,10 @@
             <div class="card text-center shadow h-100">
                 <div class="card-body">
                     <i class="bi bi-box-arrow-in-right" style="font-size: 3rem; color: #198754;"></i>
-                    <h5 class="card-title mt-3">Faça Login</h5>
-                    <p class="card-text">Entre na sua conta para fazer reservas e acessar o sistema</p>
+                    <h5 class="card-title mt-3">@(isEnglish ? "Log In" : "Faça Login")</h5>
+                    <p class="card-text">
+                        @(isEnglish ? "Sign in to your account to make reservations and access the system" : "Entre na sua conta para fazer reservas e acessar o sistema")
+                    </p>
                     <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success btn-lg">Login</a>
                 </div>
             </div>
@@ -203,10 +233,12 @@
     <div class="row mt-4">
         <div class="col-md-12">
             <div class="alert alert-info text-center shadow-sm">
-                <h4><i class="bi bi-person-plus-fill"></i> Novo por aqui?</h4>
-                <p class="mb-3">Crie uma conta para poder fazer reservas de bilhetes e testar todas as funcionalidades!</p>
+                <h4><i class="bi bi-person-plus-fill"></i> @(isEnglish ? "New here?" : "Novo por aqui?")</h4>
+                <p class="mb-3">
+                    @(isEnglish ? "Create an account to book tickets and test all features!" : "Crie uma conta para poder fazer reservas de bilhetes e testar todas as funcionalidades!")
+                </p>
                 <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg">
-                    <i class="bi bi-person-plus"></i> Registar-se Agora
+                    <i class="bi bi-person-plus"></i> @(isEnglish ? "Register Now" : "Registar-se Agora")
                 </a>
             </div>
         </div>
@@ -216,30 +248,30 @@
 <!-- Project Info Section -->
 <div class="row mt-5 pt-4 border-top">
     <div class="col-md-4 mb-4">
-        <h5><i class="bi bi-code-square text-danger"></i> Projeto Escolar</h5>
+        <h5><i class="bi bi-code-square text-danger"></i> @(isEnglish ? "School Project" : "Projeto Escolar")</h5>
         <p class="text-muted">
-            Sistema desenvolvido como projeto académico<br>
-            <small>ASP.NET Core MVC com Entity Framework</small>
+            @(isEnglish ? "System developed as an academic project" : "Sistema desenvolvido como projeto académico")<br>
+            <small>ASP.NET Core MVC @(isEnglish ? "with" : "com") Entity Framework</small>
         </p>
     </div>
     <div class="col-md-4 mb-4">
-        <h5><i class="bi bi-list-check text-primary"></i> Funcionalidades</h5>
+        <h5><i class="bi bi-list-check text-primary"></i> @(isEnglish ? "Features" : "Funcionalidades")</h5>
         <p class="text-muted">
-            CRUD completo e sistema de autenticação<br>
-            <small>Gestão de filmes, sessões e reservas</small>
+            @(isEnglish ? "Complete CRUD and authentication system" : "CRUD completo e sistema de autenticação")<br>
+            <small>@(isEnglish ? "Management of movies, sessions and reservations" : "Gestão de filmes, sessões e reservas")</small>
         </p>
     </div>
     <div class="col-md-4 mb-4">
-        <h5><i class="bi bi-database-fill text-success"></i> Base de Dados</h5>
+        <h5><i class="bi bi-database-fill text-success"></i> @(isEnglish ? "Database" : "Base de Dados")</h5>
         <p class="text-muted">
-            SQL Server com Identity Framework<br>
-            <small>Controlo de utilizadores e roles</small>
+            SQL Server @(isEnglish ? "with" : "com") Identity Framework<br>
+            <small>@(isEnglish ? "User and role control" : "Controlo de utilizadores e roles")</small>
         </p>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        console.log('Nexor Cinema - Sistema de Gestão de Cinema');
+        console.log('Nexor Cinema - @(isEnglish ? "Cinema Management System" : "Sistema de Gestão de Cinema")');
     </script>
 }

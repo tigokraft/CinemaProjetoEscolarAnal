@@ -46,7 +46,7 @@
 
                         <div class="mb-3">
                             <label asp-for="Descricao" class="form-label">
-                                <i class="bi bi-card-text"></i> <strong>Descrição / Sinopse</strong>
+                                <i class="bi bi-card-text"></i> <strong>Descrição</strong>
                             </label>
                             <textarea asp-for="Descricao" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="Descricao" class="text-danger"></span>
@@ -56,13 +56,24 @@
                             <label asp-for="CapaUrl" class="form-label">
                                 <i class="bi bi-image"></i> <strong>URL da Capa</strong>
                             </label>
-                            <input asp-for="CapaUrl" class="form-control" />
+                            <input asp-for="CapaUrl" class="form-control mb-2" id="capaUrlInput" />
                             <span asp-validation-for="CapaUrl" class="text-danger"></span>
+                            <div class="d-flex gap-2 align-items-center mt-2">
+                                <small class="form-text text-muted flex-grow-1">
+                                    <i class="bi bi-info-circle"></i> Insira o URL completo de uma imagem
+                                </small>
+                                <a href="https://www.themoviedb.org/movie" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-info">
+                                    <i class="bi bi-search"></i> Procurar Capas (TMDb)
+                                </a>
+                                <a href="https://www.imdb.com/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-search"></i> Procurar no IMDb
+                                </a>
+                            </div>
                             @if (!string.IsNullOrEmpty(Model.CapaUrl))
                             {
                                 <div class="mt-2">
                                     <small class="text-muted">Pré-visualização:</small><br>
-                                    <img src="@Model.CapaUrl" alt="Capa atual" class="img-thumbnail mt-1" style="max-width: 200px;">
+                                    <img src="@Model.CapaUrl" alt="Capa atual" class="img-thumbnail mt-1" style="max-width: 200px;" id="previewImg">
                                 </div>
                             }
                         </div>
@@ -84,4 +95,26 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Image preview update functionality
+        const capaUrlInput = document.getElementById('capaUrlInput');
+        const previewImg = document.getElementById('previewImg');
+
+        if (previewImg) {
+            capaUrlInput.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                    previewImg.src = url;
+                    previewImg.style.display = 'block';
+                    
+                    // Hide preview if image fails to load
+                    previewImg.onerror = function() {
+                        previewImg.style.display = 'none';
+                    };
+                } else if (!url) {
+                    previewImg.style.display = 'none';
+                }
+            });
+        }
+    </script>
 }

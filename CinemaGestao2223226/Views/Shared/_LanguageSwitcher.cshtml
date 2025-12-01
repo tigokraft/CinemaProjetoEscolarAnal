@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Localization
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var currentCulture = requestCulture?.RequestCulture.UICulture.Name ?? "pt-PT";
+}
+
+<style>
+    .language-switcher {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .language-btn {
+        background: none;
+        border: 2px solid transparent;
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.9rem;
+        color: #495057;
+        text-decoration: none;
+    }
+
+    .language-btn:hover {
+        border-color: #38BDF8;
+        background-color: rgba(56, 189, 248, 0.1);
+        color: #0284c7;
+    }
+
+    .language-btn.active {
+        border-color: #38BDF8;
+        background-color: rgba(56, 189, 248, 0.2);
+        font-weight: bold;
+        color: #0284c7;
+    }
+
+    .flag-icon {
+        font-size: 1.2rem;
+    }
+</style>
+
+<div class="language-switcher">
+    <form asp-controller="Language" asp-action="SetLanguage" method="post" style="display: inline;">
+        <input type="hidden" name="culture" value="pt-PT" />
+        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+        <button type="submit" class="language-btn @(currentCulture == "pt-PT" ? "active" : "")" title="Português">
+            <span class="flag-icon">🇵🇹</span>
+            <span class="d-none d-md-inline">PT</span>
+        </button>
+    </form>
+
+    <form asp-controller="Language" asp-action="SetLanguage" method="post" style="display: inline;">
+        <input type="hidden" name="culture" value="en-US" />
+        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+        <button type="submit" class="language-btn @(currentCulture == "en-US" ? "active" : "")" title="English">
+            <span class="flag-icon">🇬🇧</span>
+            <span class="d-none d-md-inline">EN</span>
+        </button>
+    </form>
+</div>

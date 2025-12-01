@@ -45,7 +45,7 @@
 
                         <div class="mb-3">
                             <label asp-for="Descricao" class="form-label">
-                                <i class="bi bi-card-text"></i> <strong>Descrição / Sinopse</strong>
+                                <i class="bi bi-card-text"></i> <strong>Descrição</strong>
                             </label>
                             <textarea asp-for="Descricao" class="form-control" rows="4" placeholder="Descreva o filme..."></textarea>
                             <span asp-validation-for="Descricao" class="text-danger"></span>
@@ -55,11 +55,23 @@
                             <label asp-for="CapaUrl" class="form-label">
                                 <i class="bi bi-image"></i> <strong>URL da Capa</strong>
                             </label>
-                            <input asp-for="CapaUrl" class="form-control" placeholder="https://exemplo.com/capa.jpg" />
+                            <input asp-for="CapaUrl" class="form-control mb-2" placeholder="https://exemplo.com/capa.jpg" id="capaUrlInput" />
                             <span asp-validation-for="CapaUrl" class="text-danger"></span>
-                            <small class="form-text text-muted">
-                                <i class="bi bi-info-circle"></i> Insira o URL completo de uma imagem
-                            </small>
+                            <div class="d-flex gap-2 align-items-center mt-2">
+                                <small class="form-text text-muted flex-grow-1">
+                                    <i class="bi bi-info-circle"></i> Insira o URL completo de uma imagem
+                                </small>
+                                <a href="https://www.themoviedb.org/movie" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-info">
+                                    <i class="bi bi-search"></i> Procurar Capas (TMDb)
+                                </a>
+                                <a href="https://www.imdb.com/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-search"></i> Procurar no IMDb
+                                </a>
+                            </div>
+                            <div id="imagePreview" class="mt-3" style="display: none;">
+                                <small class="text-muted">Pré-visualização:</small><br>
+                                <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 300px;">
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -79,4 +91,25 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Image preview functionality
+        const capaUrlInput = document.getElementById('capaUrlInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+
+        capaUrlInput.addEventListener('input', function() {
+            const url = this.value.trim();
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                previewImg.src = url;
+                imagePreview.style.display = 'block';
+                
+                // Hide preview if image fails to load
+                previewImg.onerror = function() {
+                    imagePreview.style.display = 'none';
+                };
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        });
+    </script>
 }
